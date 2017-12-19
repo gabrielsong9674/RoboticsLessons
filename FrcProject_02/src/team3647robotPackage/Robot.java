@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 
 public class Robot extends IterativeRobot {
 	// The speed of the robot while running the program
-	double leftSpeed = 0.3;
-	double rightSpeed = 0.3;
+	double leftSpeed = 0.4;
+	double rightSpeed = 0.4;
 	double distance = 5;
 	double adjustment = 0.2;
 	double leftEncoderValue;
@@ -42,10 +42,12 @@ public class Robot extends IterativeRobot {
 			leftSpeed -= adjustment;
 			Motors.leftMotor.set(leftSpeed);
 			rightSpeed += adjustment;
-			Motors.rightMotor.set(rightSpeed);
+			Motors.rightMotor.set(-rightSpeed);
 		} else if (leftEncoderValue < rightEncoderValue) {
 			rightEncoderValue -= adjustment;
+			Motors.rightMotor.set(-rightSpeed);
 			leftEncoderValue += adjustment;
+			Motors.leftMotor.set(leftSpeed);
 		} else if (leftEncoderValue == rightEncoderValue) {
 			if (leftEncoderValue >= distance && rightEncoderValue >= distance) {
 				Motors.leftMotor.set(0);
