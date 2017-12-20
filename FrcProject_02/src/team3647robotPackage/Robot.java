@@ -1,13 +1,22 @@
 package team3647robotPackage;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ */
 public class Robot extends IterativeRobot {
 	// The speed of the robot while running the program
 	double leftSpeed = 0.4;
 	double rightSpeed = 0.4;
-	double distance = 5;
-	double adjustment = 0.2;
+	double distance = 1400;
+	double adjustment = 0.005;
 	double leftEncoderValue;
 	double rightEncoderValue;
 	double speed = .3;
@@ -38,25 +47,25 @@ public class Robot extends IterativeRobot {
 	public void goStraight(double distance) {
 		leftEncoderValue = encoderObject.getLeftEncoder();
 		rightEncoderValue = encoderObject.getRightEncoder();
-		if (leftEncoderValue > rightEncoderValue) {
-			leftSpeed -= adjustment;
-			Motors.leftMotor.set(leftSpeed);
-			rightSpeed += adjustment;
-			Motors.rightMotor.set(-rightSpeed);
-		} else if (leftEncoderValue < rightEncoderValue) {
-			rightEncoderValue -= adjustment;
-			Motors.rightMotor.set(-rightSpeed);
-			leftEncoderValue += adjustment;
-			Motors.leftMotor.set(leftSpeed);
-		} else if (leftEncoderValue == rightEncoderValue) {
-			if (leftEncoderValue >= distance && rightEncoderValue >= distance) {
-				Motors.leftMotor.set(0);
-				Motors.rightMotor.set(0);
+		if (Math.abs(rightEncoderValue - leftEncoderValue) < 5) {
+			rightSpeed = .4;
+			leftSpeed = .4;
+		} else {
+			if (rightEncoderValue > leftEncoderValue) {
+				rightSpeed -= adjustment;
+				leftSpeed += adjustment;
 			} else {
-				Motors.leftMotor.set(speed);
-				Motors.rightMotor.set(-speed);
+				rightSpeed += adjustment;
+				leftSpeed -= adjustment;
 			}
-		} 
+		}
+		if (rightEncoderValue / 2 + leftEncoderValue / 2 < distance) {
+			Motors.leftMotor.set(leftSpeed);
+			Motors.rightMotor.set(-rightSpeed);
+		} else {
+			Motors.leftMotor.set(0);
+			Motors.rightMotor.set(0);
+		}
 	}
 
 	// This is the function that is called during the Tele-operated period
