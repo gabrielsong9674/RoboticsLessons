@@ -11,19 +11,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-
 public class Robot extends IterativeRobot {
 	// The speed of the robot while running the program
-
-	double leftJoystickValueY;
-	double rightJoystickValueY;
-	double leftJoystickValueX;
-	double rightJoystickX;
+	double leftSpeed = 0.4;
+	double rightSpeed = 0.4;
+	double distance = 1400;
+	double adjustment = 0.005;
 	double leftEncoderValue;
 	double rightEncoderValue;
-	double rightSpeed;
-	double leftSpeed;
-	double adjustment = .005;
+	double speed = .3;
+
 	// This function is run whenever the robot starts. This function is used for any
 	// initialization of code
 
@@ -44,53 +41,39 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 
+		goStraight(distance);
 	}
 
-
+	public void goStraight(double distance) {
+		leftEncoderValue = encoderObject.getLeftEncoder();
+		rightEncoderValue = encoderObject.getRightEncoder();
+		if (Math.abs(rightEncoderValue - leftEncoderValue) < 5) {
+			// do literally nothing
+		} 
+		else {
+			if (rightEncoderValue > leftEncoderValue) {
+				rightSpeed -= adjustment;
+				leftSpeed += adjustment;
+			} 
+			else {
+				rightSpeed += adjustment;
+				leftSpeed -= adjustment;
+			}
+		}
+		if ((rightEncoderValue + leftEncoderValue) / 2 < distance) {
+			Motors.leftMotor.set(leftSpeed);
+			Motors.rightMotor.set(-rightSpeed);
+		} else {
+			Motors.leftMotor.set(0);
+			Motors.rightMotor.set(0);
+		}
+	}
 
 	// This is the function that is called during the Tele-operated period
 	// This function runs periodically, meaning it acts as an infinite loop
 
 	public void teleopPeriodic() {
-		leftJoystickValueY = Joysticks.leftJoySticky;
-		leftJoystickValueX = Joysticks.rightJoyStickx;
-		leftEncoderValue = encoderObject.getLeftEncoder();
-		rightEncoderValue = encoderObject.getRightEncoder();
-		leftSpeed = leftJoystickValueY;
-		rightSpeed = leftJoystickValueY;
-		if(leftJoystickValueX < -.15) {
-			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(rightSpeed);
-		}
-		else if(leftJoystickValueX > .15) {
-			Motors.leftMotor.set(-leftSpeed);
-			Motors.rightMotor.set(-rightSpeed);
-		}
-		if (Math.abs(rightEncoderValue - leftEncoderValue) < 5) {
-			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(-rightSpeed);
-			 if(leftJoystickValueY < -.15) {
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(rightSpeed);
-			}
-			else if(rightJoystickValueY > .15) {
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(rightSpeed);
-			}
-		} else {
-			if (rightEncoderValue > leftEncoderValue) {
-				rightSpeed -= adjustment;
-				leftSpeed += adjustment;
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(-rightSpeed);
-			} else {
-				rightSpeed += adjustment;
-				leftSpeed -= adjustment;
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(-rightSpeed);
-			}
-		
-		}
+
 	}
 
 	// This is the function that is called during the test
