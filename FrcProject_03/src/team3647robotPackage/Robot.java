@@ -24,7 +24,7 @@ public class Robot extends IterativeRobot {
 	double rightSpeed;
 	double leftSpeed;
 	double adjustment = .005;
-	// This function is run whenever the robot starts. This function is used for any
+	// This function is run whenever the robot starts. This funcaation is used for any
 	// initialization of code
 
 	Encoders encoderObject;
