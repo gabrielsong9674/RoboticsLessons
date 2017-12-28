@@ -17,7 +17,7 @@ public class Robot extends IterativeRobot {
 
 	double leftJoystickValueY;
 	double rightJoystickValueY;
-	double leftJoystickValueX;
+	double rightJoystickValueX;
 	double rightJoystickX;
 	double leftEncoderValue;
 	double rightEncoderValue;
@@ -28,9 +28,10 @@ public class Robot extends IterativeRobot {
 	// initialization of code
 
 	Encoders encoderObject;
-
+	Joysticks joystickObject;
 	public void robotInit() {
 		encoderObject = new Encoders();
+		joystickObject = new Joysticks();
 	}
 
 	// This function runs once, right before autonomous period starts.
@@ -50,48 +51,76 @@ public class Robot extends IterativeRobot {
 
 	// This is the function that is called during the Tele-operated period
 	// This function runs periodically, meaning it acts as an infinite loop
-
+	public void PID(){
+			if (leftJoystickValueY > 0) {
+				if(leftEncoderValue-rightEncoderValue < 5){
+					leftSpeed = leftJoystickValueY;
+					rightSpeed = leftJoystickValueY;
+					Motors.leftMotor.set(leftSpeed);
+					Motors.rightMotor.set(-rightSpeed);
+					
+				}
+				else if(leftEncoderValue > rightEncoderValue) {
+					rightSpeed = rightSpeed -=adjustment;
+					leftSpeed = leftSpeed +=adjustment;
+					Motors.leftMotor.set(leftSpeed);
+					Motors.rightMotor.set(-rightSpeed);
+				}
+				else if(rightEncoderValue > leftEncoderValue) {
+					rightSpeed = rightSpeed +=adjustment;
+					leftSpeed = leftSpeed -=adjustment;
+					Motors.leftMotor.set(leftSpeed);
+					Motors.rightMotor.set(-rightSpeed);
+				}
+			else if(leftJoystickValueY < 0) {
+				if((leftEncoderValue - rightEncoderValue) <5) {
+					leftSpeed = leftJoystickValueY;
+					rightSpeed = leftJoystickValueY;
+					Motors.leftMotor.set(leftSpeed);
+					Motors.rightMotor.set(-rightSpeed);
+				}
+				else if(leftEncoderValue>rightEncoderValue) {
+					rightSpeed = rightSpeed -=adjustment;
+					leftSpeed = leftSpeed += adjustment;
+					Motors.leftMotor.set(leftSpeed);
+					Motors.rightMotor.set(-rightSpeed);
+					}
+					else if(rightEncoderValue > leftEncoderValue) {
+						rightSpeed = rightSpeed +=adjustment;
+						leftSpeed = leftSpeed -=adjustment;
+						Motors.leftMotor.set(leftSpeed);
+						Motors.rightMotor.set(-rightSpeed);
+					}
+				}
+			else {
+				Motors.leftMotor.set(0);
+				Motors.rightMotor.set(0);
+			}
+			}
+	}
 	public void teleopPeriodic() {
+		joystickObject.updateMainController();
 		leftJoystickValueY = Joysticks.leftJoySticky;
-		leftJoystickValueX = Joysticks.rightJoyStickx;
+		rightJoystickValueX = Joysticks.rightJoyStickx;
 		leftEncoderValue = encoderObject.getLeftEncoder();
 		rightEncoderValue = encoderObject.getRightEncoder();
+		
 		leftSpeed = leftJoystickValueY;
 		rightSpeed = leftJoystickValueY;
-		if(leftJoystickValueX < -.15) {
+		if(rightJoystickValueX != 0) {
 			Motors.leftMotor.set(leftSpeed);
 			Motors.rightMotor.set(rightSpeed);
 		}
-		else if(leftJoystickValueX > .15) {
-			Motors.leftMotor.set(-leftSpeed);
-			Motors.rightMotor.set(-rightSpeed);
+		else if(leftJoystickValueY != 0) {
+			PID();
 		}
-		if (Math.abs(rightEncoderValue - leftEncoderValue) < 5) {
-			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(-rightSpeed);
-			 if(leftJoystickValueY < -.15) {
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(rightSpeed);
-			}
-			else if(rightJoystickValueY > .15) {
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(rightSpeed);
-			}
-		} else {
-			if (rightEncoderValue > leftEncoderValue) {
-				rightSpeed -= adjustment;
-				leftSpeed += adjustment;
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(-rightSpeed);
-			} else {
-				rightSpeed += adjustment;
-				leftSpeed -= adjustment;
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(-rightSpeed);
-			}
-		
+		else {
+			Motors.leftMotor.set(0);
+			Motors.rightMotor.set(0);
+			encoderObject.resetEncoders();
 		}
 	}
+		
 
 	// This is the function that is called during the test
 	// Test is an option available in the driver station and can be used to test
