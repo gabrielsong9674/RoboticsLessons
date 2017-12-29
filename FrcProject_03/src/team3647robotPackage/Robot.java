@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 
-public class Robot2 extends IterativeRobot {
+public class Robot extends IterativeRobot {
 	// The speed of the robot while running the program
 
 	double leftJoystickValueY;
