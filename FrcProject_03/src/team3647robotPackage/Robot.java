@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 
-public class Robot extends IterativeRobot {
+public class Robot2 extends IterativeRobot {
 	// The speed of the robot while running the program
 
 	double leftJoystickValueY;
@@ -23,7 +23,7 @@ public class Robot extends IterativeRobot {
 	double rightEncoderValue;
 	double rightSpeed;
 	double leftSpeed;
-	double adjustment = .005;
+
 	// This function is run whenever the robot starts. This function is used for any
 	// initialization of code
 
@@ -50,23 +50,6 @@ public class Robot extends IterativeRobot {
 
 	// This is the function that is called during the Tele-operated period
 	// This function runs periodically, meaning it acts as an infinite loop
-	public void PID() {
-		//forward
-		if ((leftEncoderValue - rightEncoderValue) < 5 || (leftEncoderValue - rightEncoderValue)< -5) {
-			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(rightSpeed);
-		}
-		else if(leftEncoderValue> rightEncoderValue) {
-			rightSpeed -= adjustment;
-			 leftSpeed += adjustment;
-		}
-		else if(rightEncoderValue > leftEncoderValue) {
-			rightSpeed += adjustment;
-			leftSpeed -= adjustment;
-		}
-		
-		
-	}
 
 	public void teleopPeriodic() {
 		joystickObject.updateMainController();
@@ -77,12 +60,33 @@ public class Robot extends IterativeRobot {
 
 		leftSpeed = leftJoystickValueY;
 		rightSpeed = leftJoystickValueY;
-		if (leftJoystickValueY != 0) {
-			PID();
-		} else {
+		if (leftJoystickValueY == 0) {
 			Motors.leftMotor.set(0);
 			Motors.rightMotor.set(0);
-			encoderObject.resetEncoders();
+		} else {
+			if (Math.abs(leftEncoderValue - rightEncoderValue) < 5) {
+				Motors.leftMotor.set(leftSpeed);
+				Motors.rightMotor.set(rightSpeed);
+			} else {
+				if (leftJoystickValueY > 0) {
+					if (leftEncoderValue > rightEncoderValue) {
+						Motors.leftMotor.set(leftSpeed -= .25);
+						Motors.rightMotor.set(rightSpeed += .25);
+					} else {
+						Motors.leftMotor.set(leftSpeed += .25);
+						Motors.rightMotor.set(rightSpeed -= .25);
+					}
+				}
+				if (leftJoystickValueY < 0) {
+					if (leftEncoderValue > rightEncoderValue) {
+						Motors.leftMotor.set(leftSpeed += .25);
+						Motors.rightMotor.set(rightSpeed -= .25);
+					} else {
+						Motors.leftMotor.set(leftSpeed -= .25);
+						Motors.rightMotor.set(rightSpeed += .25);
+					}
+				}
+			}
 		}
 	}
 
