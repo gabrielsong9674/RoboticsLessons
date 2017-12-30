@@ -63,12 +63,13 @@ public class Robot extends IterativeRobot {
 		if (leftJoystickValueY == 0) {
 			Motors.leftMotor.set(0);
 			Motors.rightMotor.set(0);
+			encoderObject.resetEncoders();
 		} else {
-			if (Math.abs(leftEncoderValue - rightEncoderValue) < 6) {
+			if (leftJoystickValueY > 0) {
 				Motors.leftMotor.set(leftSpeed);
 				Motors.rightMotor.set(-rightSpeed);
 			} else {
-				if (leftJoystickValueY > 0) {
+				if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) {
 					if (leftEncoderValue > rightEncoderValue) {
 						Motors.leftMotor.set(leftSpeed -= .25);
 						Motors.rightMotor.set(-(rightSpeed += .25));
@@ -77,13 +78,18 @@ public class Robot extends IterativeRobot {
 						Motors.rightMotor.set(-(rightSpeed -= .25));
 					}
 				}
-				if (leftJoystickValueY < 0) {
-					if (leftEncoderValue > rightEncoderValue) {
-						Motors.leftMotor.set(-(leftSpeed += .25));
-						Motors.rightMotor.set(-(rightSpeed -= .25));
-					} else {
-						Motors.leftMotor.set(leftSpeed -= .25);
-						Motors.rightMotor.set(-(rightSpeed += .25));
+			if (leftJoystickValueY < 0) {
+					Motors.leftMotor.set(leftSpeed);
+					Motors.rightMotor.set(-rightSpeed);
+			} else {
+					if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) {
+						if (leftEncoderValue > rightEncoderValue) {
+							Motors.leftMotor.set(leftSpeed += .25);
+							Motors.rightMotor.set(-(rightSpeed -= .25));
+						} else {
+							Motors.leftMotor.set(leftSpeed -= .25);
+							Motors.rightMotor.set(-(rightSpeed += .25));
+						}
 					}
 				}
 			}
