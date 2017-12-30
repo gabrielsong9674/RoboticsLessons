@@ -64,26 +64,26 @@ public class Robot extends IterativeRobot {
 			Motors.leftMotor.set(0);
 			Motors.rightMotor.set(0);
 		} else {
-			if (Math.abs(leftEncoderValue - rightEncoderValue) < 5) {
+			if (Math.abs(leftEncoderValue - rightEncoderValue) < 6) {
 				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(rightSpeed);
+				Motors.rightMotor.set(-rightSpeed);
 			} else {
 				if (leftJoystickValueY > 0) {
 					if (leftEncoderValue > rightEncoderValue) {
 						Motors.leftMotor.set(leftSpeed -= .25);
-						Motors.rightMotor.set(rightSpeed += .25);
+						Motors.rightMotor.set(-(rightSpeed += .25));
 					} else {
 						Motors.leftMotor.set(leftSpeed += .25);
-						Motors.rightMotor.set(rightSpeed -= .25);
+						Motors.rightMotor.set(-(rightSpeed -= .25));
 					}
 				}
 				if (leftJoystickValueY < 0) {
 					if (leftEncoderValue > rightEncoderValue) {
-						Motors.leftMotor.set(leftSpeed += .25);
-						Motors.rightMotor.set(rightSpeed -= .25);
+						Motors.leftMotor.set(-(leftSpeed += .25));
+						Motors.rightMotor.set(-(rightSpeed -= .25));
 					} else {
 						Motors.leftMotor.set(leftSpeed -= .25);
-						Motors.rightMotor.set(rightSpeed += .25);
+						Motors.rightMotor.set(-(rightSpeed += .25));
 					}
 				}
 			}
