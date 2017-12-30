@@ -77,7 +77,7 @@ public class Robot extends IterativeRobot {
 						Motors.leftMotor.set(leftSpeed += .25);
 						Motors.rightMotor.set(-(rightSpeed -= .25));
 					}
-				}
+			}
 			if (leftJoystickValueY < 0) {
 					Motors.leftMotor.set(leftSpeed);
 					Motors.rightMotor.set(-rightSpeed);
@@ -90,7 +90,7 @@ public class Robot extends IterativeRobot {
 							Motors.leftMotor.set(leftSpeed -= .25);
 							Motors.rightMotor.set(-(rightSpeed += .25));
 						}
-					}
+			}
 				}
 			}
 		}
