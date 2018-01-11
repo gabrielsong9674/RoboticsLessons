@@ -1,3 +1,4 @@
+
 package team3647robotPackage;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -68,32 +69,37 @@ public class Robot extends IterativeRobot {
 			if (leftJoystickValueY > 0) {
 				Motors.leftMotor.set(leftSpeed);
 				Motors.rightMotor.set(-rightSpeed);
+				runPIDForward();
+			} 
+		}
+		if (leftJoystickValueY < 0) {
+			Motors.leftMotor.set(-leftSpeed);
+			Motors.rightMotor.set(rightSpeed);
+			runPIDBackward();
+		} 
+		
+	}
+	public void runPIDForward() {
+		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) {
+			if (leftEncoderValue > rightEncoderValue) {
+				Motors.leftMotor.set(leftSpeed);
+				Motors.rightMotor.set(-(rightSpeed += .34));
 			} else {
-				if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) {
-					if (leftEncoderValue > rightEncoderValue) {
-						Motors.leftMotor.set(leftSpeed);
-						Motors.rightMotor.set(-(rightSpeed += .34));
-					} else {
-						Motors.leftMotor.set(leftSpeed);
-						Motors.rightMotor.set(-(rightSpeed -= .34));
-					}
-				}
-				if (leftJoystickValueY < 0) {
-					Motors.leftMotor.set(leftSpeed);
-					Motors.rightMotor.set(-rightSpeed);
-				} else {
-					if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) {
-						Motors.leftMotor.set(leftSpeed);
-						Motors.rightMotor.set(-rightSpeed);
-						if (leftEncoderValue > rightEncoderValue) {
-							Motors.leftMotor.set(leftSpeed);
-							Motors.rightMotor.set(-(rightSpeed -= .34));
-						} else {
-							Motors.leftMotor.set(leftSpeed);
-							Motors.rightMotor.set(-(rightSpeed += .34));
-						}
-					}
-				}
+				Motors.leftMotor.set(leftSpeed);
+				Motors.rightMotor.set(-(rightSpeed -= .34));
+			}
+		}
+	}
+	public void runPIDBackward() {
+		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) {
+			Motors.leftMotor.set(leftSpeed);
+			Motors.rightMotor.set(-rightSpeed);
+			if (leftEncoderValue > rightEncoderValue) {
+				Motors.leftMotor.set(leftSpeed);
+				Motors.rightMotor.set(-(rightSpeed -= .34));
+			} else {
+				Motors.leftMotor.set(leftSpeed);
+				Motors.rightMotor.set(-(rightSpeed += .34));
 			}
 		}
 	}
