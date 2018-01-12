@@ -65,42 +65,47 @@ public class Robot extends IterativeRobot {
 			Motors.leftMotor.set(0);
 			Motors.rightMotor.set(0);
 			encoderObject.resetEncoders();
-		} else {
-			if (leftJoystickValueY > 0) {
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(-rightSpeed);
-				runPIDForward();
-			} 
+		} else if (leftJoystickValueY > 0) {
+			Motors.leftMotor.set(leftSpeed);
+			Motors.rightMotor.set(-rightSpeed);
+			runPIDForward();
 		}
-		if (leftJoystickValueY < 0) {
+
+		else {
 			Motors.leftMotor.set(-leftSpeed);
 			Motors.rightMotor.set(rightSpeed);
 			runPIDBackward();
-		} 
-		
+		}
+
 	}
+
 	public void runPIDForward() {
 		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) {
-			if (leftEncoderValue > rightEncoderValue) {
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(-(rightSpeed += .34));
-			} else {
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(-(rightSpeed -= .34));
-			}
+			Motors.leftMotor.set(leftSpeed);
+			Motors.rightMotor.set(rightSpeed);
+		} else if (leftEncoderValue > rightEncoderValue) {
+			Motors.leftMotor.set(leftSpeed -= .34);
+			Motors.rightMotor.set(-(rightSpeed += .34));
+			leftSpeed = leftJoystickValueY;
+			rightSpeed =  rightJoystickValueY;
+		} else {
+			Motors.leftMotor.set(leftSpeed +=.34);
+			Motors.rightMotor.set(-(rightSpeed -= .34));
+			leftSpeed = leftJoystickValueY;
+			rightSpeed =  rightJoystickValueY;
 		}
 	}
+
 	public void runPIDBackward() {
 		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) {
 			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(-rightSpeed);
-			if (leftEncoderValue > rightEncoderValue) {
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(-(rightSpeed -= .34));
-			} else {
-				Motors.leftMotor.set(leftSpeed);
-				Motors.rightMotor.set(-(rightSpeed += .34));
-			}
+			Motors.rightMotor.set(rightSpeed);
+		} else if (leftEncoderValue > rightEncoderValue) {
+			Motors.leftMotor.set(leftSpeed);
+			Motors.rightMotor.set(-(rightSpeed -= .34));
+		} else {
+			Motors.leftMotor.set(leftSpeed);
+			Motors.rightMotor.set(-(rightSpeed += .34));
 		}
 	}
 
