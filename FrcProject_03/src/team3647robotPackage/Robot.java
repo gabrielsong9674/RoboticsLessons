@@ -60,19 +60,22 @@ public class Robot extends IterativeRobot {
 		rightEncoderValue = encoderObject.getRightEncoder();
 
 		leftSpeed = leftJoystickValueY;
-		rightSpeed = leftJoystickValueY;
-		if (leftJoystickValueY == 0) {
+		rightSpeed = -leftJoystickValueY;
+		if (leftJoystickValueY == 0)
+		{
+			encoderObject.resetEncoders();
 			Motors.leftMotor.set(0);
 			Motors.rightMotor.set(0);
-			encoderObject.resetEncoders();
-		} else if (leftJoystickValueY > 0) {
+		} 
+		else if (leftJoystickValueY > 0) 
+		{
 			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(-rightSpeed);
+			Motors.rightMotor.set(rightSpeed);
 			runPIDForward();
 		}
-
-		else {
-			Motors.leftMotor.set(-leftSpeed);
+		else 
+		{
+			Motors.leftMotor.set(leftSpeed);
 			Motors.rightMotor.set(rightSpeed);
 			runPIDBackward();
 		}
@@ -80,32 +83,42 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void runPIDForward() {
-		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) {
+		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) 
+		{
 			Motors.leftMotor.set(leftSpeed);
 			Motors.rightMotor.set(rightSpeed);
-		} else if (leftEncoderValue > rightEncoderValue) {
-			Motors.leftMotor.set(leftSpeed -= .34);
-			Motors.rightMotor.set(-(rightSpeed += .34));
+		} 
+		else if (leftEncoderValue > rightEncoderValue)
+		{
+			Motors.leftMotor.set(leftSpeed - .5);
+			Motors.rightMotor.set(-(rightSpeed + .5));
 			leftSpeed = leftJoystickValueY;
 			rightSpeed =  rightJoystickValueY;
-		} else {
-			Motors.leftMotor.set(leftSpeed +=.34);
-			Motors.rightMotor.set(-(rightSpeed -= .34));
+		} 
+		else 
+		{
+			Motors.leftMotor.set(leftSpeed + .5);
+			Motors.rightMotor.set(rightSpeed - .5);
 			leftSpeed = leftJoystickValueY;
 			rightSpeed =  rightJoystickValueY;
 		}
 	}
 
 	public void runPIDBackward() {
-		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) {
+		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) 
+		{
 			Motors.leftMotor.set(leftSpeed);
 			Motors.rightMotor.set(rightSpeed);
-		} else if (leftEncoderValue > rightEncoderValue) {
+		}
+		else if (leftEncoderValue > rightEncoderValue)
+		{
 			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(-(rightSpeed -= .34));
-		} else {
+			Motors.rightMotor.set(rightSpeed -= .5);
+		} 
+		else 
+		{
 			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(-(rightSpeed += .34));
+			Motors.rightMotor.set(rightSpeed += .5);
 		}
 	}
 
