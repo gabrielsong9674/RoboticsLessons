@@ -69,6 +69,7 @@ public class Robot extends IterativeRobot {
 			encoderObject.resetEncoders();
 			Motors.leftMotor.set(0);
 			Motors.rightMotor.set(0);
+			sumError = 0;
 		} 
 		else if (leftJoystickValueY > 0) 
 		{
@@ -87,7 +88,7 @@ public class Robot extends IterativeRobot {
 
 	public void runPIDForward() {
 		double kp = 0.1;
-		double ki = 0.1;
+		double ki = 0.005;
 		double kd = 0.05;
 		double error = leftEncoderValue - rightEncoderValue;
 		double diffError = error - prevError;
