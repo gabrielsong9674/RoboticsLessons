@@ -125,7 +125,20 @@ public class Robot extends IterativeRobot {
 	
 */
 
-public void runPIDBackward() {
+	public void runPIDBackward() {
+		double kp = 0.1;
+		double ki = 0.005;
+		double kd = 0.05;
+		double error = leftEncoderValue - rightEncoderValue;
+		double diffError = error - prevError;
+		sumError = sumError + error;
+		
+		double inputValue = kp * error + ki * sumError + kd * diffError;
+		Motors.leftMotor.set(leftSpeed + inputValue/2);
+		Motors.rightMotor.set(-rightSpeed + inputValue/2);
+		prevError = error;
+	}
+/*
 		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) 
 		{
 			Motors.leftMotor.set(leftSpeed);
@@ -142,6 +155,7 @@ public void runPIDBackward() {
 			Motors.rightMotor.set(-rightSpeed - .4);
 		}
 	}
+	*/
 
 	// This is the function that is called during the test
 	// Test is an option available in the driver station and can be used to test
