@@ -84,7 +84,13 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void runPIDForward() {
-		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) 
+		double kp = 0.05;
+		double error = leftEncoderValue - rightEncoderValue;
+		double inputValue = kp * error;
+		Motors.leftMotor.set(leftSpeed - inputValue/2);
+		Motors.rightMotor.set(-rightSpeed - inputValue/2);
+	}
+	/*if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) 
 		{
 			Motors.leftMotor.set(leftSpeed);
 			Motors.rightMotor.set(-rightSpeed);
@@ -96,7 +102,7 @@ public class Robot extends IterativeRobot {
 //			leftSpeed = leftJoystickValueY;
 //			rightSpeed =  rightJoystickValueY;
 			Motors.leftMotor.set(leftSpeed - .4);
-			Motors.leftMotor.set(-rightSpeed);
+			Motors.rightMotor.set(-rightSpeed);
 		} 
 		else 
 		{
@@ -105,11 +111,12 @@ public class Robot extends IterativeRobot {
 //			leftSpeed = leftJoystickValueY;
 //			rightSpeed =  rightJoystickValueY;
 			Motors.leftMotor.set(leftSpeed);
-			Motors.leftMotor.set(-rightSpeed + .4 );
+			Motors.rightMotor.set(-rightSpeed + .4 );
 		}
-	}
+	
+*/
 
-	public void runPIDBackward() {
+public void runPIDBackward() {
 		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) 
 		{
 			Motors.leftMotor.set(leftSpeed);
