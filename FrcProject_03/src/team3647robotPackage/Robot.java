@@ -25,6 +25,8 @@ public class Robot extends IterativeRobot {
 	double rightSpeed;
 	double leftSpeed;
 	double prevError = 0;
+	double sumError = 0;
+	
 	// This function is run whenever the robot starts. This function is used for any
 	// initialization of code
 
@@ -85,10 +87,13 @@ public class Robot extends IterativeRobot {
 
 	public void runPIDForward() {
 		double kp = 0.1;
+		double ki = 0.1;
 		double kd = 0.05;
 		double error = leftEncoderValue - rightEncoderValue;
 		double diffError = error - prevError;
-		double inputValue = kp * error + kd * diffError;
+		sumError = sumError + error;
+		
+		double inputValue = kp * error + ki * sumError + kd * diffError;
 		Motors.leftMotor.set(leftSpeed - inputValue/2);
 		Motors.rightMotor.set(-rightSpeed - inputValue/2);
 		prevError = error;
