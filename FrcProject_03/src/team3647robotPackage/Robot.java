@@ -70,33 +70,29 @@ public class Robot extends IterativeRobot {
 			Motors.leftMotor.set(0);
 			Motors.rightMotor.set(0);
 			sumError = 0;
+			prevError = 0;
 		} 
-		else if (leftJoystickValueY > 0) 
+		else 
 		{
 //			Motors.leftMotor.set(leftSpeed);
 //			Motors.rightMotor.set(rightSpeed);
-			runPIDForward();
+			runPIDStraight();
 		}
-		else 
-		{
-//			Motors.leftMotor.set(-leftSpeed);
-//			Motors.rightMotor.set(-rightSpeed);
-			runPIDBackward();
-		}
+		
 
 	}
 
-	public void runPIDForward() {
-		double kp = 0.1;
+	public void runPIDStraight() {
+		double kp = 0.015;
 		double ki = 0.005;
-		double kd = 0.05;
+		double kd = 0.095;
 		double error = leftEncoderValue - rightEncoderValue;
 		double diffError = error - prevError;
 		sumError = sumError + error;
 		
 		double inputValue = kp * error + ki * sumError + kd * diffError;
-		Motors.leftMotor.set(leftSpeed - inputValue/2);
-		Motors.rightMotor.set(-rightSpeed - inputValue/2);
+		Motors.leftMotor.set(.8*leftSpeed - inputValue/2);
+		Motors.rightMotor.set(.8*-rightSpeed - inputValue/2);
 		prevError = error;
 	}
 	/*if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) 
@@ -134,8 +130,8 @@ public class Robot extends IterativeRobot {
 		sumError = sumError + error;
 		
 		double inputValue = kp * error + ki * sumError + kd * diffError;
-		Motors.leftMotor.set(leftSpeed + inputValue/2);
-		Motors.rightMotor.set(-rightSpeed + inputValue/2);
+		Motors.leftMotor.set(leftSpeed - inputValue/2);
+		Motors.rightMotor.set(-rightSpeed - inputValue/2);
 		prevError = error;
 	}
 /*
