@@ -1,4 +1,3 @@
-
 package team3647robotPackage;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -77,7 +76,6 @@ public class Robot extends IterativeRobot {
 //			Motors.leftMotor.set(leftSpeed);
 //			Motors.rightMotor.set(rightSpeed);
 			runPIDStraight();
-			Turn();
 		}
 		
 
@@ -95,19 +93,6 @@ public class Robot extends IterativeRobot {
 		Motors.leftMotor.set(.8*leftSpeed - inputValue/2);
 		Motors.rightMotor.set(.8*-rightSpeed - inputValue/2);
 		prevError = error;
-	}
-	public void Turn() {
-		double c = .8;
-		if(rightJoystickValueX > 0) {
-			
-			Motors.leftMotor.set(c*leftSpeed);
-			Motors.rightMotor.set(c*rightSpeed);
-		}
-		else {
-			Motors.leftMotor.set(c*-leftSpeed);
-			Motors.rightMotor.set(c*-rightSpeed);
-		}
-		
 	}
 	/*if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) 
 		{
