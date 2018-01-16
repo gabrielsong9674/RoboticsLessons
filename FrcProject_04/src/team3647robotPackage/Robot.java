@@ -53,9 +53,11 @@ public class Robot extends IterativeRobot {
 			Motors.rightMotor.set(0);
 
 		} else {
-			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(rightSpeed);
+			if (getMagnitude() == 0) {
+				Motors.leftMotor.set(0);
+				Motors.rightMotor.set(0);
 
+			}
 		}
 
 	}
