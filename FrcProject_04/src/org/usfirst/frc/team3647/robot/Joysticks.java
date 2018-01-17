@@ -1,4 +1,4 @@
-package team3647robotPackage;
+package org.usfirst.frc.team3647.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 public class Joysticks 

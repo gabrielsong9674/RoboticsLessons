@@ -1,4 +1,4 @@
-package team3647robotPackage;
+package org.usfirst.frc.team3647.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -10,10 +10,10 @@ public class Robot extends IterativeRobot {
 	double rightEncoderValue;
 	// This function is run whenever the robot starts. This function is used for any
 	// initialization of code
-
+	Joysticks joystickObject;
 	@Override
 	public void robotInit() {
-
+joystickObject = new Joysticks();
 	}
 
 	// This function runs once, right before autonomous period starts.
@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 
 	// This is the function that is called during the Tele-operated period
 	// This function runs periodically, meaning it acts as an infinite loop
-	Joysticks joystickObject;
+	
 
 	@Override
 	public void teleopPeriodic() {
