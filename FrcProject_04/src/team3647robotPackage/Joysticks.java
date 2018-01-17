@@ -18,7 +18,7 @@ public class Joysticks
 	public static double leftJoySticky;
 	public static double rightJoyStickx;
 	public static double rightJoySticky;
-	public static double leftJoyStickx;
+	public static double leftJoyStickx; 
 	
 	//assigning values to variables through this function
 	public void updateMainController()
