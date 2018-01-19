@@ -38,12 +38,12 @@ joystickObject = new Joysticks();
 		// TODO find out degree
 		double c = 0.005;
 		double turnDegree;
-		if (getDegrees() < 180 && getDegrees() > 0) {// forward
-			turnDegree = -1 * (getDegrees() - 270);
+		if (getDegrees() > 0 && getDegrees() < 180) {// forward
+			turnDegree = (getDegrees() - 90);
 			leftSpeed = getMagnitude() + c * turnDegree;
 			rightSpeed = -(getMagnitude() - c * turnDegree);
 		} else {// backward
-			turnDegree = getDegrees() - 90;
+			turnDegree = (getDegrees() - 90);
 			leftSpeed = -(getMagnitude() + c * turnDegree);
 			rightSpeed = getMagnitude() - c * turnDegree;
 		}
@@ -53,14 +53,33 @@ joystickObject = new Joysticks();
 			Motors.rightMotor.set(0);
 
 		} else {
-			if (getMagnitude() == 0) {
-				Motors.leftMotor.set(0);
-				Motors.rightMotor.set(0);
-
+			Motors.leftMotor.set(leftSpeed);
+			Motors.rightMotor.set(rightSpeed);
 			}
 		}
 
-	}
+	
+
+//Then you should do
+//(1) I saw you did experiment with printing the angles to the console, great. I want you to write down 8 angle values for forward, backward, right, left, forward-right, forward-left, backward-right, backward-left. Then draw the directions with corresponding angles (like a x-y coordinate) on the paper and check if those pairs make sense. Because I suspect the getDegrees function is not correct. You want to find out 		
+//whether 
+//                if (Joysticks.rightJoySticky == 0 && Joysticks.rightJoyStickx > 0) { //right
+//			return 180;
+//		}
+//		if (Joysticks.rightJoySticky == 0 && Joysticks.rightJoyStickx < 0) { //left
+//			return 0;
+//		}
+//or 
+// if (Joysticks.rightJoySticky == 0 && Joysticks.rightJoyStickx > 0) {
+//			return 0;
+//		}
+//		if (Joysticks.rightJoySticky == 0 && Joysticks.rightJoyStickx < 0) {
+//			return 180;
+//		}
+//(2) There is still an issue with turnDegree. After you finish step (1), then check if forward is 270 or 90 degree. If forward is 270, then the range in if statement should be getDegrees() < 360 && getDegrees() > 180. If forward is 90, then the range in if statement should be getDegrees() < 180 && getDegrees() > 0. Then in case of 270 (forward), you want to calculate turnDegree=getDegrees()-270. In case of 90 (forward), you want to calculate turnDegree=getDegrees()-90. Similar calculation applies to backward.
+//
+//(3) You can test the robot, if you want it goes forward-left, but it goes forward-right, then you multiply -1 to the turnDegree in the forward if statement. The similar rule applies to backward.
+//}
 
 	// This is the function that is called during the test
 	// Test is an option available in the driver station and can be used to test
