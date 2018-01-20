@@ -23,6 +23,7 @@ public class Robot extends IterativeRobot {
 	double rightEncoderValue;
 	double rightSpeed;
 	double leftSpeed;
+	double speed;
 	double prevError = 0;
 	double sumError = 0;
 	
@@ -66,8 +67,8 @@ public class Robot extends IterativeRobot {
 		if (leftJoystickValueY == 0)
 		{
 			encoderObject.resetEncoders();
-			Motors.leftMotor.set(0);
-			Motors.rightMotor.set(0);
+			Motors.setLeftSpeed(0);
+			Motors.setRightSpeed(0);
 			sumError = 0;
 			prevError = 0;
 		} 
@@ -88,75 +89,13 @@ public class Robot extends IterativeRobot {
 		double error = leftEncoderValue - rightEncoderValue;
 		double diffError = error - prevError;
 		sumError = sumError + error;
-		
 		double inputValue = kp * error + ki * sumError + kd * diffError;
-		Motors.leftMotor.set(.8*leftSpeed - inputValue/2);
-		Motors.rightMotor.set(.8*-rightSpeed - inputValue/2);
+		speed = .8*leftSpeed - inputValue/2;
+		Motors.setLeftSpeed(speed);
+		Motors.setRightSpeed(speed);
 		prevError = error;
 	}
-	/*if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) 
-		{
-			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(-rightSpeed);
-		} 
-		else if (leftEncoderValue > rightEncoderValue)
-		{
-//			Motors.leftMotor.set(leftSpeed - .5);
-//			Motors.rightMotor.set(-(rightSpeed + .5));
-//			leftSpeed = leftJoystickValueY;
-//			rightSpeed =  rightJoystickValueY;
-			Motors.leftMotor.set(leftSpeed - .4);
-			Motors.rightMotor.set(-rightSpeed);
-		} 
-		else 
-		{
-//			Motors.leftMotor.set(leftSpeed + .5);
-//			Motors.rightMotor.set(rightSpeed - .5);
-//			leftSpeed = leftJoystickValueY;
-//			rightSpeed =  rightJoystickValueY;
-			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(-rightSpeed + .4 );
-		}
 	
-*/
-
-	public void runPIDBackward() {
-		double kp = 0.1;
-		double ki = 0.005;
-		double kd = 0.05;
-		double error = leftEncoderValue - rightEncoderValue;
-		double diffError = error - prevError;
-		sumError = sumError + error;
-		
-		double inputValue = kp * error + ki * sumError + kd * diffError;
-		Motors.leftMotor.set(leftSpeed - inputValue/2);
-		Motors.rightMotor.set(-rightSpeed - inputValue/2);
-		prevError = error;
-	}
-/*
-		if ((Math.abs(leftEncoderValue - rightEncoderValue) < 6)) 
-		{
-			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(-rightSpeed);
-		}
-		else if (leftEncoderValue > rightEncoderValue)
-		{
-			Motors.leftMotor.set(leftSpeed + .4);
-			Motors.rightMotor.set(-rightSpeed);
-		} 
-		else 
-		{
-			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(-rightSpeed - .4);
-		}
-	}
-	*/
-
-	// This is the function that is called during the test
-	// Test is an option available in the driver station and can be used to test
-	// specific pieces of code.
-	// This function runs periodically, meaning it acts like an infinite loop
-
 	public void testPeriodic() {
 
 	}

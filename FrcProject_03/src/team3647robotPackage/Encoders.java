@@ -3,19 +3,17 @@ package team3647robotPackage;
 import edu.wpi.first.wpilibj.Encoder;
 
 public class Encoders {
-	public Encoder leftEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
-	public Encoder rightEncoder = new Encoder(4, 5, false, Encoder.EncodingType.k4X);
 
 	public double getRightEncoder() {
-		return rightEncoder.get();
+		return Motors._frontLeftMotor.getSensorCollection().getQuadraturePosition();
 	}
 
 	public double getLeftEncoder() {
-		return -leftEncoder.get();
+		return -Motors._frontRightMotor.getSensorCollection().getQuadraturePosition();
 	}
 
 	public void resetEncoders() {
-		rightEncoder.reset();
-		leftEncoder.reset();
+		Motors._frontLeftMotor.getSensorCollection().setQuadraturePosition(0, 10);
+		Motors._frontRightMotor.getSensorCollection().setQuadraturePosition(0, 10);
 	}
 }
