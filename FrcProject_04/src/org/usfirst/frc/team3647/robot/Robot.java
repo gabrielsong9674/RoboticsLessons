@@ -49,12 +49,13 @@ joystickObject = new Joysticks();
 		}
 		joystickObject.updateMainController();
 		if (getMagnitude() == 0) {
-			Motors.leftMotor.set(0);
-			Motors.rightMotor.set(0);
+			Motors.setLeftSpeed(0);
+			Motors.setRightSpeed(0);
 
 		} else {
-			Motors.leftMotor.set(leftSpeed);
-			Motors.rightMotor.set(rightSpeed);
+			
+			Motors.setLeftSpeed(leftSpeed);
+			Motors.setRightSpeed(rightSpeed);
 			}
 		}
 
