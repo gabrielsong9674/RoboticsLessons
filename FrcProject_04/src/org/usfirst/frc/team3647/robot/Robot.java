@@ -14,6 +14,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 joystickObject = new Joysticks();
+drivetrainInitialization();
 	}
 
 	// This function runs once, right before autonomous period starts.
