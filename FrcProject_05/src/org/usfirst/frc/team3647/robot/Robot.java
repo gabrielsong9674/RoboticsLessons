@@ -3,12 +3,21 @@ package org.usfirst.frc.team3647.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team3647robotPackage.Motors;
 
 
 public class Robot extends IterativeRobot 
 {	
 	Autonomous auto;
 	Encoders enc;
+	double leftEncoderValue;
+	double rightEncoderValue;
+	double rightSpeed;
+	double leftSpeed;
+	double speed;
+	double prevError = 0;
+	double sumError = 0;
+	
 	//This function is run whenever the robot starts. This function is used for any initialization of code
 	@Override
 	public void robotInit() 
@@ -24,6 +33,7 @@ public class Robot extends IterativeRobot
 	{
 		Encoders.resetEncoders();
 	}
+		
 
 	//This is the function that is called during the autonomous period
 	//This function runs periodically, meaning it acts as an infinite loop
@@ -33,7 +43,7 @@ public class Robot extends IterativeRobot
 		enc.setEncoderValues();
 		auto.runAuto(enc.leftEncoderValue, enc.rightEncoderValue);
 	}
-
+	
 	//This is the function that is called during the Tele-operated period
 	//This function runs periodically, meaning it acts as an infinite loop
 	@Override

@@ -14,7 +14,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 joystickObject = new Joysticks();
-drivetrainInitialization();
+Motors.drivetrainInitialization();
 	}
 
 	// This function runs once, right before autonomous period starts.
@@ -37,23 +37,23 @@ drivetrainInitialization();
 	@Override
 	public void teleopPeriodic() {
 		// TODO find out degree
-		double c = 0.005;
+		double c = 0.0005;//scales down the Motor speed
 		double turnDegree;
-		if (getDegrees() > 0 && getDegrees() < 180) {// forward
-			turnDegree = (getDegrees() - 90);
-			leftSpeed = getMagnitude() + c * turnDegree;
+		if (getDegrees() > 180 && getDegrees() < 360) {// forward
+			turnDegree = -(getDegrees() - 270);//turnDegree is the degrees of the robot and getDegrees() is the degrees of the joystick
+			leftSpeed = getMagnitude() + c * turnDegree;//magnitude of right joystick added to turnDegree which is scaled down by c
 			rightSpeed = -(getMagnitude() - c * turnDegree);
 		} else {// backward
-			turnDegree = (getDegrees() - 90);
+			turnDegree = (getDegrees() - 90);//backward
 			leftSpeed = -(getMagnitude() + c * turnDegree);
 			rightSpeed = getMagnitude() - c * turnDegree;
 		}
-		joystickObject.updateMainController();
-		if (getMagnitude() == 0) {
+		joystickObject.updateMainController();//updates joystick values
+		if (getMagnitude() == 0) {// not moving
 			Motors.setLeftSpeed(0);
 			Motors.setRightSpeed(0);
 
-		} else {
+		} else {//moving
 			
 			Motors.setLeftSpeed(leftSpeed);
 			Motors.setRightSpeed(rightSpeed);

@@ -2,13 +2,16 @@ package org.usfirst.frc.team3647.robot;
 
 import java.util.Date;
 
-import team3647robotPackage.Motors;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 
 public class Autonomous {
 	String autoSelected = "middleAuto";
 	long startTime = System.currentTimeMillis();
 	boolean reachedGoal = false;
+	
+	
+	
 	public void runAuto(double lEnc, double rEnc) {
 		if (autoSelected.equals("middleAuto")) {
 			middleAuto(lEnc, rEnc);
@@ -21,7 +24,13 @@ public class Autonomous {
 			Motors.rightSRX.set(0);
 		}
 	}
-
+	public void example
+	{
+//		Motors.leftSRX.set(0);
+//		Motors.rightSRX.set(0);
+		
+		Motors.drive.tankDrive(leftSpeed, rightSpeed, false);
+	}
 	double leftEncoderValue;
 	double rightEncoderValue;
 	double rightSpeed;
@@ -54,8 +63,7 @@ public class Autonomous {
 		}
 
 		prevError = error; // to calculate all errors
-		Motors.setLeftSpeed(leftSpeed);
-		Motors.setRightSpeed(rightSpeed);
+		Motors.drive.tankDrive(leftSpeed, rightSpeed, false);
 		
 	}
 
@@ -74,8 +82,7 @@ public class Autonomous {
 		if (rightSpeed > 0) {
 			rightSpeed = 0;
 		}
-		Motors.setLeftSpeed(leftSpeed);
-		Motors.setRightSpeed(rightSpeed);
+		Motors.drive.tankDrive(leftSpeed, rightSpeed, false);
 		prevError = error;
 	}
 	

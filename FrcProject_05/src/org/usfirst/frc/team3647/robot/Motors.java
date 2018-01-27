@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3647.robot;
 
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
 public class Motors 
 {
 	public static WPI_TalonSRX leftSRX = new WPI_TalonSRX(0);
@@ -12,13 +14,14 @@ public class Motors
 	
 	public static void drivetrainInitialization()
 	{
-		setLeftMotorSpeed(0);
-		setRightMotorSpeed(0);
+		Motors.leftSRX.set(0);
+		Motors.rightSRX.set(0);
 		leftSPX1.follow(leftSRX);
 		leftSPX2.follow(leftSRX);    
 		rightSPX1.follow(rightSRX);
 		rightSPX2.follow(rightSRX);
 	}
 	
+	public static DifferentialDrive drive = new DifferentialDrive(Motors.leftSRX, Motors.rightSRX);
 	
 }
