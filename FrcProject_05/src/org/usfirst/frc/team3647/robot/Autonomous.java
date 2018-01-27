@@ -38,7 +38,7 @@ public class Autonomous {
 	double backwardTime =5;
 
 	public void runPIDforward() {
-		double error = (leftEncoderValue - rightEncoderValue) / 1000; // scaling down the values to make them easier to
+		double error = (leftEncoderValue - rightEncoderValue - turnForward) / 1000; // scaling down the values to make them easier to
 																		// interpret
 		double diffError = error - prevError;// previous errors
 		sumError = sumError + error;// sum of all the errors
@@ -60,7 +60,7 @@ public class Autonomous {
 	}
 
 	public void runPIDbackward() {
-		double error = (leftEncoderValue - rightEncoderValue) / 1000;
+		double error = (leftEncoderValue - rightEncoderValue - turnBackward) / 1000;
 		double diffError = error - prevError;
 		sumError = sumError + error;
 		double inputValue = kp * error + ki * sumError + kd * diffError;
@@ -79,48 +79,14 @@ public class Autonomous {
 		prevError = error;
 	}
 	
-	public void runPIDturnForward() {
-		double error = (leftEncoderValue - rightEncoderValue - turnForward) / 1000; // scaling down the values to make them easier to interpret
-		double diffError = error - prevError;// previous errors
-		sumError = sumError + error;// sum of all the errors
-		double inputValue = kp * error + ki * sumError + kd * diffError; // PID equation
-
-		leftSpeed = .8 * leftSpeed - inputValue / 2; // 80% speed
-		rightSpeed = .8 * rightSpeed + inputValue / 2;
-	if (leftSpeed < 0) { // eliminates error where speed goes below zero
-		leftSpeed = 0;
-	}
-	if (rightSpeed < 0) { // eliminates error where speed goes below zero
-		rightSpeed = 0;
-	}
-
-		prevError = error; // to calculate all errors
-		Motors.setLeftSpeed(leftSpeed);
-		Motors.setRightSpeed(rightSpeed);
-	}
-	public void runPIDturnBackward() {
-		double error = (leftEncoderValue - rightEncoderValue - turnBackward) / 1000; // scaling down the values to make them easier to interpret
-		double diffError = error - prevError;// previous errors
-		sumError = sumError + error;// sum of all the errors
-		double inputValue = kp * error + ki * sumError + kd * diffError; // PID equation
-
-		leftSpeed = .8 * leftSpeed - inputValue / 2; // 80% speed
-		rightSpeed = .8 * rightSpeed + inputValue / 2;
-	if (leftSpeed < 0) { // eliminates error where speed goes below zero
-		leftSpeed = 0;
-	}
-	if (rightSpeed < 0) { // eliminates error where speed goes below zero
-		rightSpeed = 0;
-	}
-
-		prevError = error; // to calculate all errors
-		Motors.setLeftSpeed(leftSpeed);
-		Motors.setRightSpeed(rightSpeed);
-	}
+	
+	
 	public void middleAuto(double lEnc, double rEnc) {
 		// move straight no turn
 		leftSpeed = .3;
 		rightSpeed = .3;
+		turnForward = 0;
+		turnBackward = 0;
 		if(reachedGoal == false) {
 			if ((new Date()).getTime() - startTime<5*60*1000){
 				runPIDforward();
@@ -145,7 +111,7 @@ public class Autonomous {
 	turnBackward = 5;
 		if(reachedGoal == false) {
 			if ((new Date()).getTime() - startTime<forwardTime*60*1000){
-				runPIDturnForward();
+				runPIDforward();
 			}
 			else {
 				reachedGoal = true;
@@ -154,7 +120,7 @@ public class Autonomous {
 		}
 		else {
 			if((new Date()).getTime() - startTime<backwardTime*60*1000) {
-				runPIDturnBackward();
+				runPIDbackward();
 			}
 		}	
 
@@ -170,7 +136,7 @@ public class Autonomous {
 		turnBackward = -5;
 			if(reachedGoal == false) {
 				if ((new Date()).getTime() - startTime<forwardTime*60*1000){
-					runPIDturnForward();
+					runPIDforward();
 				}
 				else {
 					reachedGoal = true;
@@ -179,7 +145,7 @@ public class Autonomous {
 			}
 			else {
 				if((new Date()).getTime() - startTime<backwardTime*60*1000) {
-					runPIDturnBackward();
+					runPIDbackward();
 				}
 			}	
 
