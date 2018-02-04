@@ -1,11 +1,12 @@
 package org.usfirst.frc.team3647.robot;
 
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 
 public class Autonomous {
-	String autoSelected = "middleAuto";
+	String autoSelected = "leftAuto";
 	long startTime;
 	boolean reachedGoal = false;
 	boolean resetEncoder = false;
@@ -30,28 +31,33 @@ public class Autonomous {
 	double speed;
 	double prevError = 0;
 	double sumError = 0;
-	double kp = 2;
-	double ki = 0.6;
-	double kd = 0.5;
-	double turnForward;
-	double turnBackward;
-	double pauseTime = 1;
-	double sumEncoder = 0;
-	double distance = 2000;
+	double kp = 10;
+	double ki = 0.1;
+	double kd = 0.03;
+	double pauseTime = 2;
+	double averEnc = 0;
+	double sumEnc = 0;
+	double forwdist_turn = 2000;
+	double backdist_turn = 2000;
+	double straightdistance = 2000;
 	boolean reachGoal = false;
 	boolean forward = true;
-	
+	boolean isturn= false;
+
 	public void AutoVarInit() {
 		reachGoal = false;
 		forward = true;
+		isturn= false;
+		sumEnc = 0;
+		resetEncoder = true;	
 	}
 	
 	public void TimerInit() {
 		startTime = System.currentTimeMillis();
 		System.out.print("init timer");
 	}
-	public void runPIDforward(double lEnc, double rEnc) {
-		double error = (lEnc - lEnc - turnForward) / 1000; // scaling down the values to make them easier to
+	public void runPIDforward(double lEnc, double rEnc, double turnForward) {
+		double error = (lEnc - rEnc - turnForward) / 1000; // scaling down the values to make them easier to
 																		// interpret
 		double diffError = error - prevError;// previous errors
 		sumError = sumError + error;// sum of all the errors
@@ -71,7 +77,7 @@ public class Autonomous {
 		Motors.rightSpark.set(-rightSpeed);
 	}
 
-	public void runPIDbackward(double lEnc, double rEnc) {
+	public void runPIDbackward(double lEnc, double rEnc, double turnBackward) {
 		double error = (lEnc - rEnc - turnBackward) / 1000;
 		double diffError = error - prevError;
 		sumError = sumError + error;
@@ -96,12 +102,10 @@ public class Autonomous {
 	
 	public void middleAuto(double lEnc, double rEnc) {
 		// move straight no turn
-		sumEncoder = Math.abs(lEnc + rEnc)/2;
-		turnForward = 0;
-		turnBackward = 0;
-		
-		if (reachGoal) {
-			if (System.currentTimeMillis() - startTime<pauseTime*1000) {
+		averEnc = Math.abs(lEnc + rEnc)/2;
+
+		if (reachGoal) {//runs third
+			if (System.currentTimeMillis() - startTime<pauseTime*1000) {//pause
 				Motors.leftSpark.set(0);
 				Motors.rightSpark.set(0);
 				System.out.print("pause");
@@ -111,77 +115,219 @@ public class Autonomous {
 				resetEncoder = true;
 			}
 		}
-		else {
+		else { //runs first
 			if (forward) {
-				if (sumEncoder < distance) {
-					leftSpeed = 0.7-.4/(distance/2)*Math.abs(sumEncoder-distance/2);
-					rightSpeed = 0.7-.4/(distance/2)*Math.abs(sumEncoder-distance/2);
+				if (averEnc < straightdistance) {
+					leftSpeed = 0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
+					rightSpeed = 0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
 					System.out.println("PIDForward");
-					runPIDforward(lEnc, rEnc);
-					System.out.print(sumEncoder);
+					runPIDforward(lEnc, rEnc, 0);
+					System.out.println("left"+ lEnc+ " right" + rEnc);
 				}
-				else {
+				else {//runs second
 					reachGoal = true;
 					TimerInit();
 				}
-			}else {
-				if (sumEncoder < distance) {
-					leftSpeed = -(0.7-.4/(distance/2)*Math.abs(sumEncoder-distance/2));
-					rightSpeed = -(0.7-.4/(distance/2)*Math.abs(sumEncoder-distance/2));
+			}else {//backward runs fourth because forward = false
+				if (averEnc < straightdistance) {
+					leftSpeed = -(0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
+					rightSpeed = -(0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
 					System.out.println("PIDbackward");
-					runPIDbackward(lEnc, rEnc);
-					System.out.print(sumEncoder);
+					runPIDbackward(lEnc, rEnc, 0);
+					System.out.println("left"+ lEnc+ " right" + rEnc);
 
 				}
 				else {
 					Motors.leftSpark.set(0);
 					Motors.rightSpark.set(0);
+					System.out.println("left"+ lEnc+ " right" + rEnc);
 				}
 			}
 		}
 }
 	
 	public void rightAuto(double lEnc, double rEnc) {
-		// move straight turn right
-	leftSpeed = .8;
-	rightSpeed = .8;
-	turnForward = 5;
-	turnBackward = 5;
+		// move straight no turn
 		
-			if (System.currentTimeMillis() - startTime<5*1000){
-				System.out.println("PIDForward");
-				runPIDforward(lEnc, rEnc);
-			}
-			else if(System.currentTimeMillis() - startTime<(5 + 5)*1000 ) {
-				System.out.println("PIDBackward");
-				runPIDbackward(lEnc, rEnc);
-			}
-			else {
+		averEnc = Math.abs(lEnc + rEnc)/2;
+
+		double turnError = -30;//desired difference between left and right; right faster
+		if (reachGoal) {
+			if (System.currentTimeMillis() - startTime<pauseTime*1000) {
 				Motors.leftSpark.set(0);
 				Motors.rightSpark.set(0);
-		}	
+				System.out.print("pause");
+			}else {
+				reachGoal = false;
+				forward = false;
+				resetEncoder = true;
+				isturn = true;
+			}
+		}
+		else { 
+			if (forward) {
+				if(isturn == false) {
+					if (averEnc < straightdistance) {
+						leftSpeed = 0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
+						rightSpeed = 0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
+						System.out.println("PIDForward");
+						runPIDforward(lEnc, rEnc, 0);
+						System.out.println("left"+ lEnc+ " right" + rEnc);
+					}
+					else {
+						resetEncoder = true;
+						isturn = true;
+						Motors.leftSpark.set(0);
+						Motors.rightSpark.set(0);
+						sumEnc = 0;
+					}
+				}
+				else {
+					if(sumEnc < forwdist_turn) {
+						sumEnc = sumEnc + averEnc;
+						leftSpeed = 0.5;
+						rightSpeed = 0.5;
+						System.out.println("PIDForwardTurn");
+						System.out.println("sum"+sumEnc);
+						runPIDforward(lEnc, rEnc, turnError);
+						resetEncoder = true;
+					}
+					else {
+						reachGoal = true;
+						TimerInit();
+						sumEnc = 0;
+					}
+				}
+			}else {
+				if(isturn == true) {
+					if (sumEnc < backdist_turn) {
+						sumEnc = sumEnc + averEnc;
+						leftSpeed = -0.5;
+						rightSpeed = -0.5;
+						System.out.println("PIDbackwardTurn");
+						System.out.println("sum"+sumEnc);
+						runPIDbackward(lEnc, rEnc, -turnError);
+						resetEncoder = true;
+	
+					}
+					else {
+						resetEncoder = true;
+						isturn = false;
+						Motors.leftSpark.set(0);
+						Motors.rightSpark.set(0);
+					}
+				}
+				else {
+					if (averEnc < straightdistance) {
+						leftSpeed = -(0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
+						rightSpeed = -(0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
+						System.out.println("PIDbackward");
+						runPIDbackward(lEnc, rEnc, 0);
+						System.out.println("left"+ lEnc+ " right" + rEnc);
+	
+					}
+					else {
+						Motors.leftSpark.set(0);
+						Motors.rightSpark.set(0);
+						System.out.println("left"+ lEnc+ " right" + rEnc);
+					}
+				}
+				
+			}
+		}		
 	}
 			
 		
-	
-
 	public void leftAuto(double lEnc, double rEnc) {
-		// move straight turn left
-		leftSpeed = .8;
-		rightSpeed = .8;
-		turnForward = -5;
-		turnBackward = -5;
-		if (System.currentTimeMillis() - startTime<5*1000){
-			System.out.println("PIDForward");
-			runPIDforward(lEnc, rEnc);
+	// move straight no turn
+		
+		averEnc = Math.abs(lEnc + rEnc)/2;
+		
+
+		double turnError = 30;//desired difference between left and right encoders; left faster
+		if (reachGoal) {
+			if (System.currentTimeMillis() - startTime<pauseTime*1000) {
+				Motors.leftSpark.set(0);
+				Motors.rightSpark.set(0);
+				System.out.print("pause");
+			}else {
+				reachGoal = false;
+				forward = false;
+				resetEncoder = true;
+				isturn = true;
+			}
 		}
-		else if(System.currentTimeMillis() - startTime<(5 + 5)*1000) {
-			System.out.println("PIDBackward");
-			runPIDbackward(lEnc, rEnc);
-		}
-		else {
-			Motors.leftSpark.set(0);
-			Motors.rightSpark.set(0);
-	}	
-}
+		else { 
+			if (forward) {
+				if(isturn == false) {
+					if (averEnc < straightdistance) {
+						leftSpeed = 0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
+						rightSpeed = 0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
+						System.out.println("PIDForward");
+						runPIDforward(lEnc, rEnc, 0);
+						System.out.println("left"+ lEnc+ " right" + rEnc);
+					}
+					else {
+						resetEncoder = true;
+						isturn = true;
+						Motors.leftSpark.set(0);
+						Motors.rightSpark.set(0);
+						sumEnc = 0;
+					}
+				}
+				else {
+					if(sumEnc < forwdist_turn) {
+						sumEnc = sumEnc + averEnc;
+						leftSpeed = 0.5;
+						rightSpeed = 0.5;
+						System.out.println("PIDForwardTurn");
+						System.out.println("sum"+sumEnc);
+						runPIDforward(lEnc, rEnc, turnError);
+						resetEncoder = true;
+					}
+					else {
+						reachGoal = true;
+						TimerInit();
+						sumEnc = 0;
+					}
+				}
+			}else {
+				if(isturn == true) {
+					if (sumEnc < backdist_turn) {
+						sumEnc = sumEnc + averEnc;
+						leftSpeed = -0.5;
+						rightSpeed = -0.5;
+						System.out.println("PIDbackwardTurn");
+						System.out.println("sum"+sumEnc);
+						runPIDbackward(lEnc, rEnc, -turnError);
+						resetEncoder = true;
+	
+					}
+					else {
+						resetEncoder = true;
+						isturn = false;
+						Motors.leftSpark.set(0);
+						Motors.rightSpark.set(0);
+					}
+				}
+				else {
+					if (averEnc < straightdistance) {
+						leftSpeed = -(0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
+						rightSpeed = -(0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
+						System.out.println("PIDbackward");
+						runPIDbackward(lEnc, rEnc, 0);
+						System.out.println("left"+ lEnc+ " right" + rEnc);
+	
+					}
+					else {
+						Motors.leftSpark.set(0);
+						Motors.rightSpark.set(0);
+						System.out.println("left"+ lEnc+ " right" + rEnc);
+					}
+				}
+				
+			}
+		}		
+	}
+
 }
