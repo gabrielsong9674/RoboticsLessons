@@ -1,3 +1,4 @@
+
 package org.usfirst.frc.team3647.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -16,6 +17,7 @@ public class Robot extends IterativeRobot
 	Autonomous auto;
 	Encoders enc;
 	Joysticks joy;
+	Motors motor;
 	double leftEncoderValue;
 	double rightEncoderValue;
 	double rightSpeed;
@@ -31,6 +33,7 @@ public class Robot extends IterativeRobot
 		auto = new Autonomous();
 		enc = new Encoders();
 		joy = new Joysticks();
+		motor = new Motors();
 	}
 
 	 //This function runs once, right before autonomous period starts. 
@@ -40,7 +43,7 @@ public class Robot extends IterativeRobot
 		auto.AutoVarInit();
 		enc.resetEncoders();
 	}
-		
+		  
 
 	//This is the function that is called during the autonomous period
 	//This function runs periodically, meaning it acts as an infinite loop
@@ -62,8 +65,8 @@ public class Robot extends IterativeRobot
 	{
 		joy.setMainControllerValues();
 		enc.setEncoderValues();
-		Motors.leftSpark.set(joy.leftJoySticky/2);
-		Motors.rightSpark.set(-joy.rightJoySticky/2);
+		motor.leftSpark.set(joy.leftJoySticky/2);
+		motor.rightSpark.set(-joy.rightJoySticky/2);
 		System.out.print("left"+enc.leftEncoderValue);
 		System.out.println(" right"+enc.rightEncoderValue);
 
