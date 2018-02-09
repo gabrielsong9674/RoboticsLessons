@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 
 public class Autonomous {
-	String autoSelected = "leftAuto";
+	String autoSelected = "middleAuto";
 	long startTime;
 	boolean reachedGoal = false;
 	boolean resetEncoder = false;
@@ -40,6 +40,7 @@ public class Autonomous {
 	double forwdist_turn = 2000;
 	double backdist_turn = 2000;
 	double straightdistance = 2000;
+	double backwardStraightDistance = 2400;
 	boolean reachGoal = false;
 	boolean forward = true;
 	boolean isturn= false;
@@ -118,8 +119,8 @@ public class Autonomous {
 		else { //runs first
 			if (forward) {
 				if (averEnc < straightdistance) {
-					leftSpeed = 0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
-					rightSpeed = 0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
+					leftSpeed = 1-.7/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
+					rightSpeed = 1-.7/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
 					System.out.println("PIDForward");
 					runPIDforward(lEnc, rEnc, 0);
 					System.out.println("left"+ lEnc+ " right" + rEnc);
@@ -130,8 +131,8 @@ public class Autonomous {
 				}
 			}else {//backward runs fourth because forward = false
 				if (averEnc < straightdistance) {
-					leftSpeed = -(0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
-					rightSpeed = -(0.8-.4/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
+					leftSpeed = -(1-.7/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
+					rightSpeed = -(1-.7/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
 					System.out.println("PIDbackward");
 					runPIDbackward(lEnc, rEnc, 0);
 					System.out.println("left"+ lEnc+ " right" + rEnc);
@@ -148,9 +149,7 @@ public class Autonomous {
 	
 	public void rightAuto(double lEnc, double rEnc) {
 		// move straight no turn
-		
 		averEnc = Math.abs(lEnc + rEnc)/2;
-
 		double turnError = -30;//desired difference between left and right; right faster
 		if (reachGoal) {
 			if (System.currentTimeMillis() - startTime<pauseTime*1000) {
