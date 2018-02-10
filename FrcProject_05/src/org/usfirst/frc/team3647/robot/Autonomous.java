@@ -38,7 +38,7 @@ public class Autonomous {
 	double averEnc = 0;
 	double sumEnc = 0;
 	double forwdist_turn = 2000;
-	double backdist_turn = 2000;
+	double backdist_turn;// = 2000;
 	double straightdistance = 5000;
 	double backwardStraightDistance = 4400;
 	boolean reachGoal = false;
@@ -194,6 +194,7 @@ public class Autonomous {
 					else {
 						reachGoal = true;
 						TimerInit();
+						backdist_turn =sumEnc;
 						sumEnc = 0;
 					}
 				}
@@ -287,6 +288,7 @@ public class Autonomous {
 					else {
 						reachGoal = true;
 						TimerInit();
+						backdist_turn = sumEnc;
 						sumEnc = 0;
 					}
 				}
