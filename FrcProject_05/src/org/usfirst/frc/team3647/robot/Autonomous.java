@@ -39,8 +39,8 @@ public class Autonomous {
 	double sumEnc = 0;
 	double forwdist_turn = 2000;
 	double backdist_turn = 2000;
-	double straightdistance = 2000;
-	double backwardStraightDistance = 2400;
+	double straightdistance = 5000;
+	double backwardStraightDistance = 4000;
 	boolean reachGoal = false;
 	boolean forward = true;
 	boolean isturn= false;
@@ -119,8 +119,8 @@ public class Autonomous {
 		else { //runs first
 			if (forward) {
 				if (averEnc < straightdistance) {
-					leftSpeed = 1-.7/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
-					rightSpeed = 1-.7/(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
+					leftSpeed = (straightdistance/2)*Math.abs(averEnc-straightdistance/2);
+					rightSpeed = (straightdistance/2)*Math.abs(averEnc-straightdistance/2);
 					System.out.println("PIDForward");
 					runPIDforward(lEnc, rEnc, 0);
 					System.out.println("left"+ lEnc+ " right" + rEnc);
@@ -131,8 +131,8 @@ public class Autonomous {
 				}
 			}else {//backward runs fourth because forward = false
 				if (averEnc < straightdistance) {
-					leftSpeed = -(1-.7/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
-					rightSpeed = -(1-.7/(straightdistance/2)*Math.abs(averEnc-straightdistance/2));
+					leftSpeed = -(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
+					rightSpeed = -(straightdistance/2)*Math.abs(averEnc-straightdistance/2);
 					System.out.println("PIDbackward");
 					runPIDbackward(lEnc, rEnc, 0);
 					System.out.println("left"+ lEnc+ " right" + rEnc);
