@@ -101,7 +101,6 @@ public class Autonomous {
 				if (averEnc < straightdistance) {
 					leftSpeed = 1 - .7 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2);
 					rightSpeed = 1 - .7 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2);
-
 					PIDStraight(lEnc, rEnc, true, kpForward, kiForward, kdForward);
 
 				} else {// runs second
@@ -112,7 +111,6 @@ public class Autonomous {
 				if (averEnc < straightdistance) {
 					leftSpeed = -(1 - .7 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2));
 					rightSpeed = -(1 - .7 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2));
-
 					PIDStraight(lEnc, rEnc, false, kpForward, kiForward, kdForward);
 
 				} else {
@@ -126,90 +124,96 @@ public class Autonomous {
 	public void rightAuto(double lEnc, double rEnc, double straightdistance, double leftDistance,
 			double rightDistance) {
 		// move straight no turn
-		averEnc = Math.abs(lEnc + rEnc) / 2;
-		if (reachGoal) {
-			if (System.currentTimeMillis() - startTime < pauseTime * 1000) {
-				Motors.leftSpark.set(0);
-				Motors.rightSpark.set(0);
-			} else {
-				reachGoal = false;
-				forward = false;
-				resetEncoder = true;
-				isturn = true;
-			}
-		} else {
-			if (forward) {
-				if (isturn == false) {
-					if (averEnc < straightdistance) {
-						leftSpeed = 0.85 - .5 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2);
-						rightSpeed = 0.85 - .5 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2);
-
-						PIDStraight(lEnc, rEnc, true, kpForward, kiForward, kdForward);
-
+				averEnc = Math.abs(lEnc + rEnc) / 2;
+				if (reachGoal) {
+					if (System.currentTimeMillis() - startTime < pauseTime * 1000) {
+						Motors.leftSpark.set(0);
+						Motors.rightSpark.set(0);
 					} else {
+						reachGoal = false;
+						forward = false;
 						resetEncoder = true;
 						isturn = true;
-						Motors.leftSpark.set(0);
-						Motors.rightSpark.set(0);
+						iter = 0;
 					}
 				} else {
-					leftSpeed = 0.4;
-					rightSpeed = 0.6;
-					if (Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
-						Motors.leftSpark.set(leftSpeed);
-						Motors.rightSpark.set(-rightSpeed);
-					} else if (Math.abs(lEnc) < leftDistance) {
-						Motors.leftSpark.set(leftSpeed);
-						Motors.rightSpark.set(0);
-					} else if (Math.abs(rEnc) < rightDistance) {
-						Motors.leftSpark.set(0);
-						Motors.rightSpark.set(-rightSpeed);
-					} else {
-						reachGoal = true;
-						TimerInit();
-					}
+					if (forward) {
+						if (isturn == false) {
+							if (averEnc < straightdistance) {
+								leftSpeed = 0.85 - .5 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2);
+								rightSpeed = 0.85 - .5 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2);
+								PIDStraight(lEnc, rEnc, true, kpForward, kiForward, kdForward);
 
+							} else {
+								resetEncoder = true;
+								isturn = true;
+								Motors.leftSpark.set(0);
+								Motors.rightSpark.set(0);
+							}
+						} else {
+							leftSpeed = 0.4;
+							rightSpeed = 0.6;
+							if (iter < maxIter && Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
+								Motors.leftSpark.set(leftSpeed);
+								Motors.rightSpark.set(-rightSpeed);
+							} else if (iter < maxIter && Math.abs(lEnc) < leftDistance) {
+								Motors.leftSpark.set(leftSpeed);
+								Motors.rightSpark.set(0);
+							} else if (iter < maxIter && Math.abs(rEnc) < rightDistance) {
+								Motors.leftSpark.set(0);
+								Motors.rightSpark.set(-rightSpeed);
+							} else if (iter < maxIter) {
+								iter += 1;
+								resetEncoder = true;
+							} else {
+								reachGoal = true;
+								TimerInit();
+							}
+							System.out.println(lEnc + "|" + rEnc);
+
+						}
+					} else {
+						if (isturn == true) {
+							leftSpeed = -0.4;
+							rightSpeed = -0.6;
+							if (iter < maxIter && Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
+								Motors.leftSpark.set(leftSpeed);
+								Motors.rightSpark.set(-rightSpeed);
+							} else if (iter < maxIter && Math.abs(lEnc) < leftDistance) {
+								Motors.leftSpark.set(leftSpeed);
+								Motors.rightSpark.set(0);
+							} else if (iter < maxIter && Math.abs(rEnc) < rightDistance) {
+								Motors.leftSpark.set(0);
+								Motors.rightSpark.set(-rightSpeed);
+							} else if (iter < maxIter) {
+								iter += 1;
+								resetEncoder = true;
+							} else {
+
+								resetEncoder = true;
+								isturn = false;
+								Motors.leftSpark.set(0);
+								Motors.rightSpark.set(0);
+
+							}
+
+						} else {
+							if (averEnc < straightdistance) {
+								leftSpeed = -(0.85 - .5 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2));
+								rightSpeed = -(0.85 - .5 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2));
+
+								PIDStraight(lEnc, rEnc, false, kpForward, kiForward, kdForward);
+
+							} else {
+								Motors.leftSpark.set(0);
+								Motors.rightSpark.set(0);
+
+							}
+						}
+
+					}
 				}
-			} else {
-				if (isturn == true) {
-					leftSpeed = -0.4;
-					rightSpeed = -0.6;
-					if (Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
-						Motors.leftSpark.set(leftSpeed);
-						Motors.rightSpark.set(-rightSpeed);
-					} else if (Math.abs(lEnc) < leftDistance) {
-						Motors.leftSpark.set(leftSpeed);
-						Motors.rightSpark.set(0);
-					} else if (Math.abs(rEnc) < rightDistance) {
-						Motors.leftSpark.set(0);
-						Motors.rightSpark.set(-rightSpeed);
-					} else {
-
-						resetEncoder = true;
-						isturn = false;
-						Motors.leftSpark.set(0);
-						Motors.rightSpark.set(0);
-
-					}
-
-				} else {
-					if (averEnc < straightdistance) {
-						leftSpeed = -(0.85 - .5 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2));
-						rightSpeed = -(0.85 - .5 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2));
-
-						PIDStraight(lEnc, rEnc, false, kpForward, kiForward, kdForward);
-
-					} else {
-						Motors.leftSpark.set(0);
-						Motors.rightSpark.set(0);
-
-					}
-				}
-
 			}
-		}
-	}
-
 	public void leftAuto(double lEnc, double rEnc, double straightdistance, double leftDistance, double rightDistance) {
 		// move straight no turn
 		averEnc = Math.abs(lEnc + rEnc) / 2;
@@ -230,7 +234,6 @@ public class Autonomous {
 					if (averEnc < straightdistance) {
 						leftSpeed = 0.85 - .5 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2);
 						rightSpeed = 0.85 - .5 / (straightdistance / 2) * Math.abs(averEnc - straightdistance / 2);
-
 						PIDStraight(lEnc, rEnc, true, kpForward, kiForward, kdForward);
 
 					} else {
@@ -242,40 +245,39 @@ public class Autonomous {
 				} else {
 					leftSpeed = 0.6;
 					rightSpeed = 0.4;
-					if (iter<maxIter && Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
+					if (iter < maxIter && Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
 						Motors.leftSpark.set(leftSpeed);
 						Motors.rightSpark.set(-rightSpeed);
-					} else if (iter<maxIter && Math.abs(lEnc) < leftDistance) {
+					} else if (iter < maxIter && Math.abs(lEnc) < leftDistance) {
 						Motors.leftSpark.set(leftSpeed);
 						Motors.rightSpark.set(0);
-					} else if (iter<maxIter && Math.abs(rEnc) < rightDistance) {
+					} else if (iter < maxIter && Math.abs(rEnc) < rightDistance) {
 						Motors.leftSpark.set(0);
 						Motors.rightSpark.set(-rightSpeed);
-					}else if (iter<maxIter){
+					} else if (iter < maxIter) {
 						iter += 1;
 						resetEncoder = true;
 					} else {
 						reachGoal = true;
 						TimerInit();
 					}
-					System.out.println(lEnc+"|"+rEnc);
+					System.out.println(lEnc + "|" + rEnc);
 
 				}
 			} else {
 				if (isturn == true) {
 					leftSpeed = -0.6;
 					rightSpeed = -0.4;
-					if (iter<maxIter && Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
+					if (iter < maxIter && Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
 						Motors.leftSpark.set(leftSpeed);
 						Motors.rightSpark.set(-rightSpeed);
-					} else if (iter<maxIter && Math.abs(lEnc) < leftDistance) {
+					} else if (iter < maxIter && Math.abs(lEnc) < leftDistance) {
 						Motors.leftSpark.set(leftSpeed);
 						Motors.rightSpark.set(0);
-					} else if (iter<maxIter && Math.abs(rEnc) < rightDistance) {
+					} else if (iter < maxIter && Math.abs(rEnc) < rightDistance) {
 						Motors.leftSpark.set(0);
 						Motors.rightSpark.set(-rightSpeed);
-					}
-					else if(iter<maxIter) {
+					} else if (iter < maxIter) {
 						iter += 1;
 						resetEncoder = true;
 					} else {
