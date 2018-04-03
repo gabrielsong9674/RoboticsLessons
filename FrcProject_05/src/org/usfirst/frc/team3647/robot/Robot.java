@@ -1,3 +1,4 @@
+
 package org.usfirst.frc.team3647.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -32,6 +33,7 @@ public class Robot extends IterativeRobot
 		auto = new Autonomous();
 		enc = new Encoders();
 		joy = new Joysticks();
+		motor = new Motors();
 	}
 
 	 //This function runs once, right before autonomous period starts. 
@@ -41,7 +43,7 @@ public class Robot extends IterativeRobot
 		auto.AutoVarInit();
 		enc.resetEncoders();
 	}
-		
+		  
 
 	//This is the function that is called during the autonomous period
 	//This function runs periodically, meaning it acts as an infinite loop
@@ -78,4 +80,7 @@ public class Robot extends IterativeRobot
 	{
 		
 	}
+
 }
+
+

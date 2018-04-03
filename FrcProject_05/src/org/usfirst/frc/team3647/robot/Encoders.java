@@ -1,19 +1,24 @@
 package org.usfirst.frc.team3647.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
+
 public class Encoders 
 {
 	public double leftEncoderValue, rightEncoderValue;
 	
+	Encoder rightEncoder = new Encoder(2,3, false, Encoder.EncodingType.k4X);
+	Encoder leftEncoder = new Encoder(0,1, false, Encoder.EncodingType.k4X);
+	
 	public void setEncoderValues()
 	{
-		leftEncoderValue = Motors.rightSRX.getSensorCollection().getQuadraturePosition();
-		rightEncoderValue = -Motors.leftSRX.getSensorCollection().getQuadraturePosition();
+		leftEncoderValue = -leftEncoder.get();
+		rightEncoderValue = rightEncoder.get();
 	}
 	
-	public static void resetEncoders()
+	public  void resetEncoders()
 	{
-		Motors.leftSRX.getSensorCollection().setQuadraturePosition(0, 10);
-		Motors.rightSRX.getSensorCollection().setQuadraturePosition(0, 10);
+		leftEncoder.reset();
+		rightEncoder.reset();
 	}
 	
 	public void testEncoders()
