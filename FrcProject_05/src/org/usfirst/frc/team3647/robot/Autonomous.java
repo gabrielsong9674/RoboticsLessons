@@ -13,9 +13,15 @@ public class Autonomous {
 		if (autoSelected.equals("middleAuto")) {
 			middleAuto(lEnc, rEnc, 5000);
 		} else if (autoSelected.equals("rightAuto")) {
+<<<<<<< HEAD
 			rightAuto(lEnc, rEnc, 0, 20, 30);
 		} else if (autoSelected.equals("leftAuto")) {
 			leftAuto(lEnc, rEnc, 0, 30, 20);
+=======
+			rightAuto(lEnc, rEnc, 0, 26, 34);
+		} else if (autoSelected.equals("leftAuto")) {
+			leftAuto(lEnc, rEnc, 0, 34, 26);
+>>>>>>> e56df314b74c0f18ac7d082ca69c230d23250cfc
 		} else {
 			Motors.leftSpark.set(0);
 			Motors.rightSpark.set(0);
@@ -151,7 +157,11 @@ public class Autonomous {
 								Motors.rightSpark.set(0);
 							}
 						} else {
+<<<<<<< HEAD
 							leftSpeed = 0.5;
+=======
+							leftSpeed = 0.4;
+>>>>>>> e56df314b74c0f18ac7d082ca69c230d23250cfc
 							rightSpeed = 0.6;
 							if (iter < maxIter && Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
 								Motors.leftSpark.set(leftSpeed);
@@ -174,7 +184,11 @@ public class Autonomous {
 						}
 					} else {
 						if (isturn == true) {
+<<<<<<< HEAD
 							leftSpeed = -0.5;
+=======
+							leftSpeed = -0.4;
+>>>>>>> e56df314b74c0f18ac7d082ca69c230d23250cfc
 							rightSpeed = -0.6;
 							if (iter < maxIter && Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
 								Motors.leftSpark.set(leftSpeed);
@@ -244,7 +258,11 @@ public class Autonomous {
 					}
 				} else {
 					leftSpeed = 0.6;
+<<<<<<< HEAD
 					rightSpeed = 0.5;
+=======
+					rightSpeed = 0.4;
+>>>>>>> e56df314b74c0f18ac7d082ca69c230d23250cfc
 					if (iter < maxIter && Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
 						Motors.leftSpark.set(leftSpeed);
 						Motors.rightSpark.set(-rightSpeed);
@@ -267,7 +285,11 @@ public class Autonomous {
 			} else {
 				if (isturn == true) {
 					leftSpeed = -0.6;
+<<<<<<< HEAD
 					rightSpeed = -0.5;
+=======
+					rightSpeed = -0.4;
+>>>>>>> e56df314b74c0f18ac7d082ca69c230d23250cfc
 					if (iter < maxIter && Math.abs(lEnc) < leftDistance && Math.abs(rEnc) < rightDistance) {
 						Motors.leftSpark.set(leftSpeed);
 						Motors.rightSpark.set(-rightSpeed);
@@ -306,4 +328,8 @@ public class Autonomous {
 			}
 		}
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> e56df314b74c0f18ac7d082ca69c230d23250cfc
