@@ -1,4 +1,6 @@
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,72 +29,82 @@ static String questionSeventh = "How much is in your bank account? Include decim
 
 public static void makeUI()
 	{
-		makeBox(questionFirst, questionSecond);
+		makeBox(questionFirst, questionSecond, questionThird, questionFourth);
 	
 		
 	}
-static JFrame frame = new JFrame();
-static JPanel panel = new JPanel();
+static JFrame frame = new JFrame("FortuneTeller");
+static JPanel panel = new JPanel(new GridBagLayout());
+static GridBagConstraints panelGrid = new GridBagConstraints();
+
+
 
 static JLabel labelFirst = new JLabel();
 static JTextField textFirst = new JTextField(50);
-static JButton buttonFirst = new JButton();
 
 static JLabel labelSecond = new JLabel();
 static JTextField textSecond = new JTextField(50);
-static JButton buttonSecond = new JButton();
 
 static JLabel labelThird = new JLabel();
-static JTextField texThird = new JTextField(50);
-static JButton buttonThird = new JButton();
+static JTextField textThird = new JTextField(50);
 
 static JLabel labelFourth = new JLabel();
-static JTextField textFourth = new JTextField();
-static JButton  buttonFourt = new JButton();
+static JTextField textFourth = new JTextField(50);
 
 static JLabel labelFifth = new JLabel();
-static JTextField textFifth = new JTextField();
-static JButton buttonFifth = new JButton();
+static JTextField textFifth = new JTextField(50);
 
+static JLabel labelSixth = new JLabel();
+static JTextField textSixth = new JTextField(50);
 
+static JLabel labelSeventh = new JLabel();
+static JTextField textSeventh = new JTextField(50);
 
 static String firstName;
 static String lastName;
-public static void makeBox(String questionFirst, String questionSecond)
+static String month;
+static String year;
+static String day;
+static String bankNum;
+static String amount;
+public static void makeBox(String questionFirst, String questionSecond, String questionThird, String questionFourth)
 	{
 		frame.add(panel);
 		frame.setVisible(true);
 	    JFrame.setDefaultLookAndFeelDecorated(true);
-	    frame.setSize(1000,  400);
+	    frame.setSize(1000,  1000);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		panel.add(labelFirst);
-		labelFirst.setText(questionFirst);
-		panel.add(textFirst);
-		panel.add(buttonFirst);
-		buttonFirst.setText("Submit");
-		panel.add(labelSecond);
-		labelSecond.setText(questionSecond);
-		panel.add(textSecond);
-		panel.add(buttonSecond);
-		buttonSecond.setText("Submit");
+		panelGrid.gridx = 0;
+		panelGrid.gridy = 0;
+		panelGrid.anchor = GridBagConstraints.EAST;
+		panel.add(new JLabel(questionFirst), panelGrid);
+//		panel.add(textFirst);
+		
+//		panel.add(labelSecond);
+//		labelSecond.setText(questionSecond);
+//		panel.add(textSecond);
+//		
+//		panel.add(labelThird);
+//		labelThird.setText(questionThird);
+//		panel.add(textThird);
+//		
+//		panel.add(labelFourth);
+//		labelFourth.setText(questionFourth);
+//		panel.add(textFourth);
+//		 
+//		panel.add(labelFifth);
+//		labelFifth.setText(questionFifth);
+//		panel.add(textFifth);
+//		
+//		panel.add(labelSixth);
+//		labelSixth.setText(questionSixth);
+//		panel.add(textSixth);
+//		
+//		panel.add(labelSeventh);
+//		labelSeventh.setText(questionSeventh);
+//		panel.add(textSeventh);
+//	
 	
-buttonFirst.addActionListener(new ActionListener()
-		{
-public void actionPerformed(ActionEvent arg0) 
-	{
-		firstName = textFirst.getText();
-		System.out.println(firstName);
-	}
-});
-
-buttonSecond.addActionListener(new ActionListener()
-	{
-public void actionPerformed(ActionEvent arg0)
-{
-		lastName = textSecond.getText();
-		System.out.println(lastName);
-	}
-});
 		
 }
 @Override
